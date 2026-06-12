@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+dataset/
+dataset_split/
+
+
+# Virtual environment
+venv/
+env/
+
+# Database / uploads
+*.db
+
+# IDE
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python packages
+*.egg-info/
+dist/
+build/
+test_predict.py
+train.py
+split_dataset.py
+predict.py
+dataset.rar
+history.db
