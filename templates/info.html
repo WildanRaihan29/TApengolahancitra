@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Informasi Penyakit{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="mb-5">
+        <h2 class="fw-bold">📚 Pusat Informasi Penyakit Padi</h2>
+        <p class="text-muted">
+            Pelajari berbagai jenis penyakit daun padi, gejala, penyebab, dan metode penanganannya.
+        </p>
+    </div>
+
+    <!-- Search -->
+    <div class="card shadow-sm p-4 mb-4">
+        <input
+            id="searchInput"
+            type="text"
+            class="form-control"
+            placeholder="Cari penyakit...">
+    </div>
+
+    <!-- Disease Cards -->
+    <div class="row g-4" id="diseaseCards">
+
+        {% for disease in diseases %}
+        <div class="col-lg-4 col-md-6 card-item">
+
+            <div class="card shadow-sm h-100 border-0">
+
+                <!-- Image -->
+                <img
+                    src="{{ disease.image }}"
+                    class="card-img-top"
+                    style="height:220px; object-fit:cover;"
+                    alt="{{ disease.name }}">
+
+                <div class="card-body">
+
+                    <!-- Badge -->
+                    <span class="badge bg-success mb-2">Penyakit Padi</span>
+
+                    <!-- Title -->
+                    <h4 class="fw-bold">{{ disease.name }}</h4>
+
+                    <!-- Description -->
+                    <p class="text-muted">{{ disease.description }}</p>
+                    <hr>
+
+                    <!-- Symptoms -->
+                    <h6 class="fw-bold text-danger">Gejala</h6>
+                    <p>{{ disease.symptoms }}</p>
+
+                    <!-- Causes -->
+                    <h6 class="fw-bold text-warning">Penyebab</h6>
+                    <p>{{ disease.causes }}</p>
+
+                    <!-- Treatment -->
+                    <h6 class="fw-bold text-success">Penanganan</h6>
+                    <p>{{ disease.treatment }}</p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+                    <button class="btn btn-success w-100">Pelajari Lebih Lanjut</button>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- JS: Search Filter -->
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card-item');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        cards.forEach(card => {
+            const title = card.querySelector('.fw-bold').textContent.toLowerCase();
+            if(title.includes(filter)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

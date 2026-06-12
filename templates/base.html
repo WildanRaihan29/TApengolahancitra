@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AgroScan{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background:#f4f7f8;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* Navbar */
+        .navbar{
+            box-shadow:0 2px 10px rgba(0,0,0,.08);
+        }
+
+        /* Main container */
+        .main-container{
+            flex:1;
+            margin-top:30px;
+            margin-bottom:30px;
+        }
+
+        /* Card styling */
+        .card{
+            border:none;
+            border-radius:16px;
+        }
+
+        /* Result box warna sesuai penyakit */
+        .result-box{
+            border-radius:16px;
+            padding:20px;
+        }
+
+        .blast{background:#ffe5e5; border-left:6px solid #dc3545;}
+        .blight{background:#fff8e1; border-left:6px solid #ffc107;}
+        .brownspot{background:#f3e5f5; border-left:6px solid #9c27b0;}
+        .hispa{background:#e3f2fd; border-left:6px solid #2196f3;}
+        .normal{background:#e8f5e9; border-left:6px solid #198754;}
+        .tungro{background:#fff3e0; border-left:6px solid #ff9800;}
+        .invalid{background:#f5f5f5; border-left:6px solid #6c757d;}
+
+        /* Info card */
+        .info-card{
+            border-radius:16px;
+            padding:15px;
+            background:white;
+            border:1px solid #eee;
+        }
+
+        /* Preview gambar */
+        .preview-img{
+            width:100%;
+            max-height:350px;
+            object-fit:contain;
+            border-radius:15px;
+        }
+
+        /* Footer */
+        footer{
+            background:#198754;
+            color:white;
+            padding:15px 0;
+            text-align:center;
+        }
+        .upload-icon{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    background:#e8f1ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+}
+
+.drop-area{
+    border:2px dashed #7ab8ff;
+    border-radius:20px;
+    min-height:400px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+    background:#f9fbff;
+}
+
+.drop-area:hover{
+    background:#f0f7ff;
+}
+
+.dragover{
+    background:#e8f3ff;
+}
+
+.upload-cloud{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.result-placeholder{
+    height:400px;
+    border-radius:20px;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:#6c757d;
+    padding:30px;
+}
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a class="navbar-brand" href="/">🌾 AgroScan</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" href="/">Deteksi</a>
+      <a class="nav-link" href="/history">Riwayat</a>
+      <a class="nav-link" href="/information">Informasi Penyakit</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid main-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Footer -->
+<footer>
+    🌾 AgroScan AI © 2026 - Sistem Deteksi Penyakit Daun Padi
+</footer>
+
+</body>
+</html>

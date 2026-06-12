@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Riwayat Deteksi{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold">🕒 Riwayat Deteksi</h2>
+        <p class="text-muted">Kelola dan lihat seluruh hasil deteksi penyakit daun padi.</p>
+    </div>
+
+    <!-- Search & Actions -->
+    <div class="card shadow-sm p-4 mb-4">
+        <div class="row g-3 align-items-center">
+
+            <div class="col-md-6">
+                <input
+                    id="searchInput"
+                    type="text"
+                    class="form-control"
+                    placeholder="Cari berdasarkan penyakit atau ID...">
+            </div>
+
+            <div class="col-md-6 text-md-end">
+                <button id="filterBtn" class="btn btn-outline-secondary">Filter</button>
+                <button id="exportBtn" class="btn btn-success">Export CSV</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm p-4 mb-4">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover" id="historyTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Thumbnail</th>
+                        <th>Penyakit</th>
+                        <th>Confidence</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td>#{{ item.id }}</td>
+                        <td>
+                            <img src="{{ item.thumbnail }}" width="60" height="60" class="rounded object-fit-cover">
+                        </td>
+                        <td>
+                            {% if item.result == "Blast" %}
+                            <span class="badge bg-danger">Blast</span>
+                            {% elif item.result == "Blight" %}
+                            <span class="badge bg-warning text-dark">Blight</span>
+                            {% elif item.result == "Brown Spot" %}
+                            <span class="badge bg-secondary">Brown Spot</span>
+                            {% elif item.result == "Hispa" %}
+                            <span class="badge bg-primary">Hispa</span>
+                            {% elif item.result == "Normal" %}
+                            <span class="badge bg-success">Normal</span>
+                            {% elif item.result == "Tungro" %}
+                            <span class="badge bg-orange">Tungro</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="progress me-2" style="width:120px;height:8px;">
+                                    <div class="progress-bar bg-success" style="width:{{ item.confidence }}%"></div>
+                                </div>
+                                {{ "%.1f"|format(item.confidence) }}%
+                            </div>
+                        </td>
+                        <td>{{ item.date }}</td>
+                        <td>
+                            <button
+    class="btn btn-outline-danger btn-sm deleteBtn"
+    data-id="{{ item.id }}">
+    Hapus
+</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chart Statistik -->
+    <div class="card shadow-sm p-4">
+        <h4 class="fw-bold mb-3">📊 Statistik Deteksi Penyakit</h4>
+        <canvas id="diseaseChart"></canvas>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Chart.js
+const ctx = document.getElementById('diseaseChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Blast','Blight','Brown Spot','Hispa','Normal','Tungro'],
+        datasets: [{
+            label: 'Jumlah Deteksi',
+            data: {{ chart_data|safe }},
+            backgroundColor: ['#dc3545','#ffc107','#9c27b0','#2196f3','#198754','#ff9800'],
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Search filter
+document.getElementById("searchInput").addEventListener("input", function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#historyTable tbody tr");
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? "" : "none";
+    });
+});
+
+// Delete row
+document.querySelectorAll(".deleteBtn").forEach(btn => {
+
+    btn.addEventListener("click", function() {
+
+        const row = this.closest("tr");
+        const id = this.dataset.id;
+
+        if(confirm("Yakin ingin menghapus data ini?")){
+
+            fetch(`/delete/${id}`, {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if(data.success){
+                    row.remove();
+                }
+
+            });
+
+        }
+
+    });
+
+});
+
+// Export CSV
+document.getElementById("exportBtn").addEventListener("click", () => {
+    let csv = [];
+    const rows = document.querySelectorAll("#historyTable tr");
+    rows.forEach(row => {
+        const cols = row.querySelectorAll("td, th");
+        const rowData = [];
+        cols.forEach(col => rowData.push(col.innerText.replace(/(\r\n|\n|\r)/gm,"").trim()));
+        csv.push(rowData.join(","));
+    });
+    const csvString = csv.join("\n");
+    const a = document.createElement("a");
+    a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csvString);
+    a.download = "history.csv";
+    a.click();
+});
+</script>
+
+<style>
+.bg-orange{background:#ff9800;}
+.object-fit-cover{object-fit:cover;}
+</style>
+
+{% endblock %}
