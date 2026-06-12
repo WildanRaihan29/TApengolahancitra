@@ -1,0 +1,20 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.result-box {
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 280px;
+}
+
+.blast { background-color:#ffe5e5; border-left:6px solid #dc3545; }
+.blight { background-color:#fff8e1; border-left:6px solid #ffc107; }
+.brownspot { background-color:#f3e5f5; border-left:6px solid #9c27b0; }
+.hispa { background-color:#e3f2fd; border-left:6px solid #2196f3; }
+.normal { background-color:#e8f5e9; border-left:6px solid #198754; }
+.tungro { background-color:#fff3e0; border-left:6px solid #ff9800; }
+.invalid { background-color:#f1f1f1; border-left:6px solid #6c757d; }
+
+.info-card img { max-height: 200px; object-fit: cover; }
